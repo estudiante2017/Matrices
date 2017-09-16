@@ -1,0 +1,217 @@
+// operacionmatriz.cpp: define el punto de entrada de la aplicación de consola.
+//
+
+#include "stdafx.h"
+#include <iostream>
+#include <stdlib.h>
+#include <string> // libreria para el operador (<<) con cout
+#include <stdio.h>
+#include <conio.h>
+#include <math.h>
+using namespace std;
+
+class Matrix {
+
+private: // Atributos  (caracteristicas)
+	
+public: //Metodos (acciones)
+	int **matriz;
+	//int **matriz2;
+	int nFilas;
+	int nCol;
+	Matrix(int, int);  //Constructor 
+	void pedirDatos(); // incorporar las dos matrices en esta funcion.
+	void mostrarMatriz();
+	void sumar(int**, int **);
+	void multiplicar(int**, int **);
+	void GaussJord(int **);
+
+	
+};
+
+//constructor, Sirve para inicializar los atributos 
+Matrix::Matrix(int _nFilas, int _nCol) {
+	nFilas = _nFilas;
+	nCol = _nCol;
+}
+
+// se definesn los metodos como funciones especificando 
+//a la clase a la que pertenecese como en este caso es Persona
+//void - clase - :: - funcion.
+
+void Matrix::pedirDatos() {
+
+	
+	matriz = new int*[nFilas];
+
+	//Reserva de memoria para las columnas
+	for (int i = 0; i < nFilas; i++) {
+		matriz[i] = new int[nCol];
+	}
+
+	//Ingresar Datos de la Matriz
+	cout << "\nDigite los datos de la matriz\n" << endl;
+	for (int i = 0; i < nFilas; i++) {
+		for (int j = 0; j < nCol; j++) {
+
+			cout << "Digite un Numero [" << i << "][" << j << "]: ";
+			cin >> *(*(matriz + i) + j);//es igual a: cin >> puntero_matriz[i][j];
+		}
+	}
+}
+
+void Matrix::mostrarMatriz() {
+	
+	cout << "\nSu Matriz es:\n" << endl;
+	for (int i = 0; i < nFilas; i++) {
+
+		for (int j = 0; j < nCol; j++) {
+
+			cout << *(*(matriz + i) + j) << " ";//es igual a: cin >> puntero_matriz[i][j];
+		}
+		cout << "\n\n";
+	}
+}
+
+void Matrix::sumar(int **matriz1, int **matriz2) {
+
+	for (int i = 0; i < nFilas; i++) {
+
+		for (int j = 0; j < nCol; j++) {
+
+			cout << *(*(matriz1 + i) + j) + *(*(matriz2 + i) + j) << " ";//es igual a: cin >> puntero_matriz[i][j];
+		}
+		cout << "\n\n";
+	}
+}
+
+void Matrix::multiplicar(int **matriz1, int **matriz2) {
+	int producto=0;
+	int **matrizProducto;
+	int cont = 0;
+	
+	//Reserva de memoria para la matriz producto
+	//Reserva para las columnas
+	matrizProducto = new int*[nFilas];
+
+	//Reserva de memoria para las columnas
+	for (int i = 0; i < nFilas; i++) {
+		matrizProducto[i] = new int[nCol];
+	}
+
+	//int suma[nFilas][nCol];
+	for (int i = 0; i < nFilas; i++) {
+
+		for (int j = 0; j < nCol; j++) {
+			//producto = ((*(*(matriz1 + i) + j)) * (*(*(matriz2 + j) + i))) + producto;
+
+			for (int k = 0; k < nCol; k++) {
+				                                                                          //                nCol-1              
+				producto = ((*(*(matriz1 + i) + k)) * (*(*(matriz2 + k) + j))) + producto;//formula C[i,j]=sumatoria( m1[i,k] * m2[k,j] );
+			}                                                                             //                 k=0;
+
+			*(*(matrizProducto + i) + j) = producto;
+			cout << *(*(matrizProducto + i) + j) << " ";
+			producto = 0;
+		}
+		cout << "\n\n";
+	}
+}
+
+//Eliminacion por Gauss Jordan.
+void Matrix::GaussJord(int **matriz3) {
+
+	if(nFilas == nCol)
+	{
+		float **matrizJ;
+		float aux;
+		//Reserva de memoria para la matriz producto
+		//Reserva para las columnas
+		matrizJ = new float*[nFilas];
+
+		//Reserva de memoria para las columnas
+		for (int i = 0; i < nFilas; i++) {
+			matrizJ[i] = new float[nCol];
+		}
+
+		for (int i = 0; i < nFilas; i++) {
+			for (int j = 0; j < nCol; j++) {
+
+				*(*(matrizJ + i) + j) =(double) *(*(matriz3 + i) + j);
+
+			}
+		}
+
+		///
+		for (int i = 0; i < nFilas; i++)
+		{
+			if (*(*(matrizJ + i) + i) != 0)
+			{
+				aux =(float) 1 / (*(*(matrizJ + i) + i));
+				for (int j = 0; j < nFilas; j++)//for (int j = 1; j <= nFilas + 1; j++) para tener encuenta nFilas + 1 la coulumna de valores independientes.
+				{
+					*(*(matrizJ + i) + j) = aux * *(*(matrizJ + i) + j);
+				}
+
+				for (int j = 0; j < nFilas; j++)
+				{
+					if (j != i)
+					{
+						aux = (-1 * (*(*(matrizJ + j) + i)));
+						for (int k = 0; k < nFilas; k++) // for (int k = 1; k <= nFilas + 1; k++)
+						{
+							*(*(matrizJ + j) + k)  = *(*(matrizJ + j) + k) + aux * *(*(matrizJ + i) + k);
+						}
+					}
+				}
+			}
+		}
+
+
+		cout << "\n";
+		cout << "la matriz identidad es";
+		cout << "\n\n";
+		for (int i = 0; i < nFilas; i++)
+		{
+			for (int j = 0; j < nFilas; j++)
+			{
+				cout << *(*(matrizJ + i) + j) << "\t";
+			}
+			cout << "\n\n";
+		}
+
+	}
+	else {
+
+		cout << "La Matriz no es Cuadrada" << endl;
+	}
+}
+
+
+int main()
+{
+	Matrix M1(3, 3);
+	M1.pedirDatos();
+	M1.mostrarMatriz();
+
+	cout << "\n";
+
+	//Matrix M2(3, 3);
+	//M2.pedirDatos();
+	//M2.mostrarMatriz();
+
+	//cout << "\nLa Suma de M1 y M2 es:\n" << endl;
+
+	//M1.sumar(M1.matriz, M2.matriz);
+
+	//cout << "\nEl Producto de M1 y M2 es:\n" << endl;
+
+	//M1.multiplicar(M1.matriz, M2.matriz);
+
+	M1.GaussJord(M1.matriz);
+
+
+
+	system("PAUSE");
+    return 0;
+}
