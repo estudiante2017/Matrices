@@ -1,0 +1,118 @@
+// HeapSort2.cpp: define el punto de entrada de la aplicación de consola.
+//
+
+#include "stdafx.h"
+#include <iostream>
+#include <stdlib.h>
+#include <string> // libreria para el operador (<<) con cout
+#include <stdio.h>
+#include <conio.h>
+#include <math.h>
+using namespace std;
+
+
+class ArregloHP {
+private: // Atributos  (caracteristicas)
+
+
+	int  i;
+	int N;
+	int Tcima;
+
+public:
+	int *arreglo;
+
+	ArregloHP(int); //constructor
+					//~ArregloHP();
+
+	void pedirDatos();
+	void Max_Heapify(int *, int, int);
+	void Build_Max_Heap(int *, int);
+	void Heapsort(int *);
+
+};
+
+ArregloHP::ArregloHP(int _N) {
+
+	N = _N;
+
+}
+
+void ArregloHP::pedirDatos() {
+
+	arreglo = new int[N];
+
+	//ingresar los datos del arreglo
+	cout << "\nIngrese uno por uno el total de elementos especificados (" << N << ")\n" << endl;
+	for (int i = 1; i <= N; i++) {
+		cout << "Digite el Elemento [" << i << "]" << endl;
+		cin >> *(arreglo + i);
+	}
+
+	//Mostrar Vector o Arreglo
+	cout << "Su Arreglo de Elementos es: \n" << endl;
+	for (int i = 1; i <= N; i++) {
+		cout << *(arreglo + i) << " ";
+	}
+	cout << "\n" << endl;
+}
+
+void ArregloHP::Max_Heapify(int *arreglo, int i, int N) {
+	int l, r, Mayor, loc;
+	l = 2 * i;
+	r = (2 * i + 1);
+	if ((l <= N) && (arreglo[l] > arreglo[i])) {
+		Mayor = l;
+	}
+	else {
+		Mayor = i;
+	}
+	if ((r <= N) && (arreglo[r] > arreglo[Mayor])) {
+		Mayor = r;
+	}
+	if (Mayor != i) {
+		loc = arreglo[i];
+		arreglo[i] = arreglo[Mayor];
+		arreglo[Mayor] = loc;
+		
+		Max_Heapify(arreglo, Mayor, N);
+	}
+}
+
+void ArregloHP::Build_Max_Heap(int *arreglo, int N) {
+
+	for (int k = N / 2; k >= 1; k--) {
+		Max_Heapify(arreglo, k, N);
+
+	}
+}
+
+void ArregloHP::Heapsort(int *arreglo) {
+
+	Build_Max_Heap(arreglo, N);
+
+	int i, temp;
+	for (i = N; i >= 2; i--) {
+		temp = arreglo[i];
+		arreglo[i] = arreglo[1];
+		arreglo[1] = temp;
+
+		Max_Heapify(arreglo, 1, i - 1);
+	}
+
+	//Mostrar Vector o Arreglo
+	cout << "Su Arreglo Ordenado de Elementos es: \n" << endl;
+	for (int i = 1; i <= N; i++) {
+		cout << *(arreglo + i) << " ";
+	}
+	cout << "\n" << endl;
+}
+
+int main()
+{
+	ArregloHP A1(5);
+	A1.pedirDatos();
+	A1.Heapsort(A1.arreglo);
+	system("PAUSE");
+    return 0;
+}
