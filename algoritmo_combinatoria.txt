@@ -1,0 +1,98 @@
+// algoritmocombinatoria.cpp: define el punto de entrada de la aplicación de consola.
+//
+
+#include "stdafx.h"
+#include <iostream>
+#include <stdlib.h>
+#include <string> // libreria para el operador (<<) con cout
+#include <stdio.h>
+#include <conio.h>
+#include <math.h>
+using namespace std;
+
+
+class MatrixD {
+
+private: // Atributos  (caracteristicas)
+	int **matrizD;
+	int n;
+	int k;
+public: //Metodos (acciones)
+	
+	
+	
+	MatrixD(int, int);  //Constructor 
+	~MatrixD();// Destructor;
+
+	//void pedirDatos(); // incorporar las dos matrices en esta funcion.
+	//void mostrarMatriz();
+	void combinatoria();
+	
+
+};
+
+//constructor, Sirve para inicializar los atributos 
+MatrixD::MatrixD(int _n, int _k) {
+	n = _n;
+	k = _k;
+}
+
+MatrixD::~MatrixD() {
+
+}
+
+void MatrixD::combinatoria() {
+
+	//Reserva de memoria para la matriz dinamica
+	//Reserva para las columnas
+	matrizD = new int*[n + 1];
+
+	//Reserva de memoria para las columnas
+	for (int i = 0; i <= n; i++) {
+		matrizD[i] = new int[n + 1];
+	}
+
+	//llenado de la matriz
+
+	//llenado de la primera columna de 1
+	for (int i = 0; i <= n; i++) {
+
+		*(*(matrizD + i) + 0) = 1;//es igual a: cin >> puntero_matriz[i][j];
+
+	}
+	// llenado de la segunda columna (indice)
+	for (int i = 1; i <= n; i++) {
+
+		*(*(matrizD + i) + 1) = i;
+	}
+	//llenado de la diagonal
+	for (int i = 2; i <= k; i++) { // i<=n
+
+		*(*(matrizD + i) + i) = 1;
+	}
+
+	//llenado de la matriz
+	for (int i = 3; i <= n; i++) {
+
+		for (int j = 2; j < i; j++) {
+
+			if (j <= k) {
+				*(*(matrizD + i) + j) = *(*(matrizD + i - 1) + j - 1) + *(*(matrizD + i - 1) + j); //=C[i-1,j-1]+C[i-1,j];
+			}
+		}
+	}
+
+	cout << "El Coeficiente Binomial o Combinatoria con n: "<<n<<" y K: "<<k<<" es = "<<*(*(matrizD + n) + k) << "\n" << endl;
+}
+
+int main()
+{
+	MatrixD M1(10, 2);
+	M1.combinatoria();
+
+	M1.~MatrixD();
+
+	system("PAUSE");
+    return 0;
+}
+

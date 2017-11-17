@@ -1,0 +1,123 @@
+// subsecuenciacomunmaslarga.cpp: define el punto de entrada de la aplicación de consola.
+//
+
+#include "stdafx.h"
+#include <iostream>
+#include <stdlib.h>
+#include <string> // libreria para el operador (<<) con cout
+#include <stdio.h>
+#include <conio.h>
+#include <math.h>
+using namespace std;
+
+class MatrixS {
+
+private: // Atributos  (caracteristicas)
+
+public: //Metodos (acciones)
+	int **matrizS;
+	char **matrizP;
+	//int **matriz2;
+	std::string S1;
+	std::string S2;
+	int n;
+	int m;
+
+	MatrixS(std::string, std::string);  //Constructor 
+
+	void Tabla();
+	void Mostrar(); 
+};
+
+//constructor, Sirve para inicializar los atributos 
+MatrixS::MatrixS(std::string _S1, std::string _S2) {
+	S1 = _S1;
+	S2 = _S2;
+	n = S1.length()+1; //n = filas
+	m = S2.length()+1; // m = Columnas
+}
+
+void MatrixS::Tabla() {
+	
+	cout << n << endl;
+	cout << m << endl;
+
+	//Reserva de memoria para la matriz dinamica
+	//Reserva para las filas
+	matrizS = new int*[n];
+	//---------------------------------------
+	matrizP = new char*[n];
+
+	//Reserva de memoria para las columnas
+	for (int i = 0; i < n; i++) {
+		matrizS[i] = new int[m];
+	}
+	//---------------------------------------
+	for (int i = 0; i < m; i++) {
+		matrizP[i] = new char[m];
+	}
+
+	//llenar Tabla-------------------------------
+
+	for (int i = 0; i < n; i++) { //filas
+
+		*(*(matrizS + i) + 0) = 0;
+	}
+
+	for (int j = 0; j < m; j++) {//columnas
+
+		*(*(matrizS + 0) + j) = 0;
+	}
+	//------------------------------------------
+	for (int j = 1; j <= m; j++) {
+		for (int i = 1; i <= n; i++) {
+
+			if (S1[i] == S2[j]) {
+				*(*(matrizS + j) + i) = *(*(matrizS + j - 1) + i - 1) + 1;
+
+				*(*(matrizP + j) + i) = (char)"D";
+			}
+			else if (*(*(matrizS + j-1) + i) >= *(*(matrizS + j) + i-1)) {
+				
+				*(*(matrizS + j) + i) = *(*(matrizS + j - 1) + i);
+
+				*(*(matrizP + j) + i) = (char)"S";
+			}
+
+			else {
+				*(*(matrizS + j) + i) = *(*(matrizS + j) + i - 1);
+
+				*(*(matrizP + j) + i) = (char)"I";
+			}
+
+			}
+		}
+	}
+
+void MatrixS::Mostrar() {
+	cout << "\nSu Matriz es:\n" << endl;
+	for (int i = 0; i <= n; i++) {
+
+		for (int j = 0; j <= m; j++) {
+
+			cout << *(*(matrizS + i) + j) << " ";//es igual a: cin >> puntero_matriz[i][j];
+		}
+
+		cout << "\n\n";
+	}
+}
+
+
+int main()
+{
+	MatrixS M1("printing", "sprintime");
+
+	M1.Tabla();
+	M1.Mostrar();
+	
+
+
+	system("PAUSE");
+    return 0;
+}
+
